@@ -22,8 +22,8 @@ def get_title_from_html(filepath):
 
 def extract_info(filepath):
     filename = os.path.basename(filepath)
-    # Expected format: YYYYMMDD_Title.html
-    match = re.match(r'^(\d{8})_(.+?)\.html$', filename)
+    # Expected format: YYYYMMDD_Title.html or YYYYMMDD.html
+    match = re.match(r'^(\d{8})(?:_(.+?))?\.html$', filename)
     
     date_str = ""
     title_from_file = ""
@@ -32,7 +32,7 @@ def extract_info(filepath):
         date_raw = match.group(1)
         # Format date as YYYY-MM-DD
         date_str = f"{date_raw[:4]}-{date_raw[4:6]}-{date_raw[6:]}"
-        title_from_file = match.group(2).strip()
+        title_from_file = match.group(2).strip() if match.group(2) else date_raw
     else:
         # Fallback to file creation/modification time if format doesn't match
         mtime = os.path.getmtime(filepath)
